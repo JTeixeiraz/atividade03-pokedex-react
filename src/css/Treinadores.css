@@ -1,0 +1,7 @@
+.treinadores { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+.treinador { background: var(--card); border: 2px solid var(--borda); border-radius: 16px; padding: 16px; }
+.treinador header { display: flex; justify-content: space-between; align-items: center; }
+.treinador h3 { margin: 0; }
+.treinador__time { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.treinador__time button { all: unset; cursor: pointer; text-align: center; width: 64px; color: var(--texto); }
+.treinador__time img { width: 56px; height: 56px; object-fit: contain; } .treinador__time small { display: block; font-size: 11px; text-transform: capitalize; }
