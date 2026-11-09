@@ -1,0 +1,5 @@
+.stat-bar { display: grid; grid-template-columns: 64px 36px 1fr; align-items: center; gap: 8px; font-size: 13px; }
+.stat-bar__label { color: var(--texto-suave); }
+.stat-bar__valor { font-weight: 700; text-align: right; }
+.stat-bar__trilho { height: 8px; background: var(--trilho); border-radius: 99px; overflow: hidden; }
+.stat-bar__preenchimento { height: 100%; background: linear-gradient(90deg, #ff5959, #ffb000); border-radius: 99px; transition: width .5s ease; }
