@@ -1,0 +1,10 @@
+.modal-fundo { position: fixed; inset: 0; background: rgba(0,0,0,.6); display: grid; place-items: center; padding: 16px; z-index: 10; animation: aparecer .2s; }
+.modal { position: relative; width: min(520px, 100%); max-height: 90vh; overflow: auto; background: linear-gradient(160deg, color-mix(in srgb, var(--cor-tipo) 35%, var(--card)), var(--card) 55%); border-radius: 22px; padding: 24px; color: var(--texto); animation: subir .25s; }
+.modal__fechar { position: absolute; top: 12px; right: 14px; background: none; border: 0; font-size: 20px; color: var(--texto); cursor: pointer; }
+.modal__topo { display: flex; gap: 16px; align-items: center; margin-bottom: 16px; }
+.modal__topo img { width: 140px; height: 140px; object-fit: contain; filter: drop-shadow(0 8px 10px rgba(0,0,0,.35)); }
+.modal__topo h2 { margin: 2px 0 8px; text-transform: capitalize; }
+.modal__tipos { display: flex; gap: 6px; }
+.modal__stats { display: grid; gap: 8px; }
+.modal__total, .modal__donos { color: var(--texto-suave); margin: 8px 0 0; }
+@keyframes aparecer { from { opacity: 0 } } @keyframes subir { from { transform: translateY(20px); opacity: 0 } }
