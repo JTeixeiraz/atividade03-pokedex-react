@@ -1,0 +1,2 @@
+.pokemon-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+.pokemon-list__vazio { text-align: center; padding: 64px 0; font-size: 20px; color: var(--texto-suave); }
