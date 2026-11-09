@@ -1,122 +1,86 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import { useMemo, useState } from 'react'
+import { pokemons, tipos, treinadores } from './data/pokedex'
+import { useLocalStorage } from './hooks/useLocalStorage'
+import SearchBar from './components/SearchBar'
+import Filters from './components/Filters'
+import PokemonList from './components/PokemonList'
+import PokemonDetails from './components/PokemonDetails'
+import Comparador from './components/Comparador'
+import Treinadores from './components/Treinadores'
+import './css/App.css'
 
-function App() {
-  const [count, setCount] = useState(0)
+const normalizar = (s) => s.trim().toLowerCase()
+
+export default function App() {
+  const [aba, setAba] = useState('pokedex')
+  const [busca, setBusca] = useState('')
+  const [tipo, setTipo] = useState('')
+  const [ordem, setOrdem] = useState('id')
+  const [apenasFavoritos, setApenasFavoritos] = useState(false)
+  const [favoritos, setFavoritos] = useLocalStorage('pokedex:favoritos', [])
+  const [tema, setTema] = useLocalStorage('pokedex:tema', 'escuro')
+  const [selecionado, setSelecionado] = useState(null)
+  const [comparando, setComparando] = useState([])
+
+  // estado derivado: lista filtrada e ordenada
+  const visiveis = useMemo(() => {
+    const termo = normalizar(busca).replace(/^#/, '')
+    const lista = pokemons.filter((p) => {
+      const numerico = /^\d+$/.test(termo)
+      const casaBusca = !termo || (numerico ? p.id === Number(termo) : p.name.toLowerCase().includes(termo))
+      const casaTipo = !tipo || p.types.some((t) => t.name === tipo)
+      const casaFav = !apenasFavoritos || favoritos.includes(p.id)
+      return casaBusca && casaTipo && casaFav
+    })
+    return [...lista].sort((a, b) => {
+      if (ordem === 'id') return a.id - b.id
+      if (ordem === 'name') return a.name.localeCompare(b.name)
+      return b.stats[ordem] - a.stats[ordem]
+    })
+  }, [busca, tipo, ordem, apenasFavoritos, favoritos])
+
+  const alternarFavorito = (id) =>
+    setFavoritos((f) => (f.includes(id) ? f.filter((x) => x !== id) : [...f, id]))
+
+  const alternarComparacao = (id) =>
+    setComparando((c) => (c.includes(id) ? c.filter((x) => x !== id) : [...c, id].slice(-2)))
+
+  const aleatorio = () => setSelecionado(pokemons[Math.floor(Math.random() * pokemons.length)])
+
+  const [a, b] = comparando.map((id) => pokemons.find((p) => p.id === id))
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+    <div className="app" data-tema={tema}>
+      <header className="app__topo">
+        <h1>⚡ Pokédex</h1>
+        <nav>
+          <button className={aba === 'pokedex' ? 'ativo' : ''} onClick={() => setAba('pokedex')}>Pokémon</button>
+          <button className={aba === 'treinadores' ? 'ativo' : ''} onClick={() => setAba('treinadores')}>Treinadores</button>
+          <button onClick={() => setTema(tema === 'escuro' ? 'claro' : 'escuro')} aria-label="Alternar tema">
+            {tema === 'escuro' ? '☀️' : '🌙'}
+          </button>
+        </nav>
+      </header>
+      <main className="app__conteudo">
+        {aba === 'pokedex' ? (
+          <>
+            <div className="app__controles">
+              <SearchBar valor={busca} onChange={setBusca} />
+              <Filters tipos={tipos} tipo={tipo} onTipo={setTipo} ordem={ordem} onOrdem={setOrdem}
+                onAleatorio={aleatorio} apenasFavoritos={apenasFavoritos} onFavoritos={() => setApenasFavoritos((v) => !v)} />
+            </div>
+            {a && <Comparador a={a} b={b} onLimpar={() => setComparando([])} />}
+            <p className="app__contagem">{visiveis.length} Pokémon</p>
+            <PokemonList pokemons={visiveis} favoritos={favoritos} comparando={comparando}
+              onSelecionar={setSelecionado} onFavoritar={alternarFavorito} onComparar={alternarComparacao} />
+          </>
+        ) : (
+          <Treinadores treinadores={treinadores} pokemons={pokemons} onSelecionar={setSelecionado} />
+        )}
+      </main>
+      {selecionado && (
+        <PokemonDetails pokemon={selecionado} treinadores={treinadores} onFechar={() => setSelecionado(null)} />
+      )}
+    </div>
   )
 }
-
-export default App
