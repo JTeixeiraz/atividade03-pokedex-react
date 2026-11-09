@@ -1,0 +1,8 @@
+.comparador { background: var(--card); border: 2px solid var(--destaque); border-radius: 16px; padding: 16px; margin-bottom: 20px; }
+.comparador header { display: flex; justify-content: space-between; align-items: center; }
+.comparador h3 { margin: 0; } .comparador button { padding: 6px 12px; border-radius: 8px; border: 1px solid var(--borda); background: transparent; color: var(--texto); cursor: pointer; }
+.comparador__grade { display: flex; justify-content: space-around; text-align: center; text-transform: capitalize; }
+.comparador__col img { width: 90px; height: 90px; object-fit: contain; display: block; margin: 0 auto; }
+.comparador table { width: 100%; text-align: center; border-collapse: collapse; margin-top: 8px; }
+.comparador td, .comparador th { padding: 4px; } .comparador th { color: var(--texto-suave); font-weight: 500; }
+.comparador td.vence { color: #16a34a; font-weight: 800; }
