@@ -1,0 +1,4 @@
+.filters { display: flex; gap: 8px; flex-wrap: wrap; }
+.filters select, .filters button { padding: 10px 14px; border-radius: 12px; border: 2px solid var(--borda); background: var(--card); color: var(--texto); font-size: 14px; cursor: pointer; }
+.filters button:hover { border-color: var(--destaque); }
+.filters button.ativo { background: var(--destaque); color: #fff; border-color: var(--destaque); }
